@@ -35,19 +35,7 @@
 }
 #poster-root[data-layout="classic"] .poster-bottom-row {
   padding-top: 0.75em;
-  border: 0 !important;
-  border-radius: 0 !important;
-  outline: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-}
-#poster-root[data-layout="classic"] .poster-bottom-row .poster-tracklist {
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
+  border-top: 1px solid color-mix(in srgb, var(--fp-border-color) 14%, transparent);
 }
 #poster-root[data-layout="classic"] .poster-bottom-right .poster-qr-wrap,
 #poster-root[data-layout="classic"] .poster-bottom-right .poster-code-wrap {

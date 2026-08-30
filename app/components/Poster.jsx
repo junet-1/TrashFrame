@@ -302,7 +302,6 @@ function getRetroPanelLabel(album) {
 function LayoutClassic({ album, quote, codeType, barColor, codeColor }) {
   return (
     <>
-      <TextureOverlay type="grain" />
       <div className="poster-date">{album.releaseDate}</div>
       <Cover src={album.coverUrl} name={album.name} />
       <div className="poster-info">
