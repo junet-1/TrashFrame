@@ -431,3 +431,12 @@
 #poster-root[data-layout="masterpiece-receipt"] .receipt-barcode .poster-code-wrap {
   justify-content: center;
 }
+
+/* Codes sit directly on the poster instead of inside a second card. */
+#poster-root .poster-qr-wrap,
+#poster-root .poster-code-wrap {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
