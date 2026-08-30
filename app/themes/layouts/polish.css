@@ -35,7 +35,19 @@
 }
 #poster-root[data-layout="classic"] .poster-bottom-row {
   padding-top: 0.75em;
-  border-top: 1px solid color-mix(in srgb, var(--fp-border-color) 14%, transparent);
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+#poster-root[data-layout="classic"] .poster-bottom-row .poster-tracklist {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 #poster-root[data-layout="classic"] .poster-bottom-right .poster-qr-wrap,
 #poster-root[data-layout="classic"] .poster-bottom-right .poster-code-wrap {
@@ -430,13 +442,4 @@
 #poster-root[data-layout="masterpiece-receipt"] .receipt-barcode .poster-qr-wrap,
 #poster-root[data-layout="masterpiece-receipt"] .receipt-barcode .poster-code-wrap {
   justify-content: center;
-}
-
-/* Codes sit directly on the poster instead of inside a second card. */
-#poster-root .poster-qr-wrap,
-#poster-root .poster-code-wrap {
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
 }
