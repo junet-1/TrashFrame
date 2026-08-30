@@ -184,6 +184,7 @@ export default function Sidebar({
   urlLoading,
   urlError,
   coverUrl,
+  provider,
   onUndo,
   onRedo,
   canUndo,
@@ -349,8 +350,8 @@ export default function Sidebar({
             type="text"
             value={urlValue}
             onChange={(e) => onUrlChange(e.target.value)}
-            placeholder="Paste a new Spotify link\u2026"
-            aria-label="Spotify album or song link"
+            placeholder="Paste a Spotify or Apple Music link\u2026"
+            aria-label="Spotify or Apple Music album or song link"
             className="sidebar-url-input"
           />
           <button type="submit" disabled={urlLoading || !urlValue?.trim()} className="sidebar-url-btn">
@@ -564,13 +565,15 @@ export default function Sidebar({
                   </svg>
                   QR Code
                 </button>
-                <button
-                  onClick={() => setOverride("codeType", "scannable")}
-                  className={`cover-mode-btn ${overrides.codeType === "scannable" ? "cover-mode-active" : ""}`}
-                  aria-pressed={overrides.codeType === "scannable"}
-                >
-                  Spotify Code
-                </button>
+                {provider === "spotify" && (
+                  <button
+                    onClick={() => setOverride("codeType", "scannable")}
+                    className={`cover-mode-btn ${overrides.codeType === "scannable" ? "cover-mode-active" : ""}`}
+                    aria-pressed={overrides.codeType === "scannable"}
+                  >
+                    Spotify Code
+                  </button>
+                )}
               </div>
             </div>
             <div className="sidebar-field">

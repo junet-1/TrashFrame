@@ -29,7 +29,7 @@ const geistMono = localFont({
 });
 
 const SITE_DESCRIPTION =
-  "Turn any Spotify album or song into a printable poster. 14 layout presets, custom typography and colors, and high-DPI PNG + PDF export.";
+  "Turn any Spotify or Apple Music album or song into a printable poster. 14 layout presets, custom typography and colors, and high-DPI PNG + PDF export.";
 
 export const metadata = {
   metadataBase: new URL("https://trash-frame.vercel.app"),

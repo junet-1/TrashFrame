@@ -1,6 +1,6 @@
 # TrashFrame
 
-Turn any **Spotify album or song** into a stunning, **printable poster**. Choose from 14 theme presets across 13 layouts, fine-tune album art, tweak typography, and export at configurable DPI for real picture frames.
+Turn any **Spotify or Apple Music album or song** into a stunning, **printable poster**. Choose from 14 theme presets across 13 layouts, fine-tune album art, tweak typography, and export at configurable DPI for real picture frames.
 
 **Live repo:** [github.com/Somchandra17/TrashFrame](https://github.com/Somchandra17/TrashFrame)
 **Live app:** [trash-frame.vercel.app](https://trash-frame.vercel.app/)
@@ -11,6 +11,11 @@ Turn any **Spotify album or song** into a stunning, **printable poster**. Choose
 
 ### Spotify Integration
 - Paste any **Spotify album or song link** (including `spotify.link` short URLs). Tracks, durations, cover art, and URI load instantly via a client-credentials flow proxied through Next.js API routes.
+
+### Apple Music Integration
+- Paste a regional **Apple Music album or song link** (for example, `music.apple.com/de/...`). Album metadata, the complete track list, durations, release details, and high-resolution artwork load through the server-side Apple lookup proxy.
+- Song share links using Apple Music's `?i=<song-id>` format are detected automatically.
+- No additional Apple credentials are required for public catalog lookups.
 
 ### 14 Theme Presets (13 Layouts)
 - **Classic** - Clean album poster with big cover, tracklist, and QR code.
@@ -87,6 +92,8 @@ Open [http://localhost:3000](http://localhost:3000).
    SPOTIFY_CLIENT_SECRET=your_client_secret
    ```
 
+Apple Music works without environment variables. It uses Apple's public, ID-based catalog lookup endpoint and keeps requests server-side so the same flow works locally and on Vercel.
+
 ---
 
 ## Project Structure
@@ -105,7 +112,10 @@ Open [http://localhost:3000](http://localhost:3000).
 | `app/lib/colors.js` | Canvas-based palette extraction + luminance-based auto colors |
 | `app/lib/export.js` | PNG / PDF export with configurable DPI |
 | `app/lib/spotify.js` | URL parsing, short-link resolution, data fetching & normalization |
+| `app/lib/appleMusic.js` | Apple Music URL parsing, artwork upgrading, data fetching & normalization |
+| `app/lib/music.js` | Provider detection and shared fetch entry point |
 | `app/api/spotify/*` | Album & track data proxy routes + short-link resolver |
+| `app/api/apple-music/lookup` | Server-side Apple catalog lookup proxy |
 
 ---
 
@@ -116,7 +126,7 @@ npm run build
 npm start
 ```
 
-Deploy anywhere that supports Next.js 14 (e.g. Vercel). Ensure album cover hosts `i.scdn.co` and `scannables.scdn.co` remain allowed in `next.config.mjs` `images.remotePatterns` if you use `next/image` elsewhere.
+Deploy anywhere that supports Next.js 14 (e.g. Vercel). Spotify requires the two environment variables above; Apple Music needs no extra configuration. Album artwork is loaded from Spotify's `i.scdn.co` or Apple's `mzstatic.com` CDN, both declared in `next.config.mjs`.
 
 ---
 

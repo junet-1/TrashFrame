@@ -6,7 +6,7 @@ import Poster from "./components/Poster";
 import Sidebar from "./components/Sidebar";
 import HelpModal from "./components/HelpModal";
 import Image from "next/image";
-import { fetchSpotifyItem } from "./lib/spotify";
+import { fetchMusicItem } from "./lib/music";
 import { extractPalette, extractDominantColors } from "./lib/colors";
 import { DEFAULT_FRAME, DEFAULT_OVERRIDES, PRESET_THEMES } from "./lib/constants";
 import { extractFontsFromCss, sanitizeTheme } from "./lib/theme";
@@ -14,17 +14,25 @@ import { extractFontsFromCss, sanitizeTheme } from "./lib/theme";
 const RECENT_KEY = "trashframe_recent";
 const MAX_RECENT = 6;
 const DEMO_SPOTIFY_URL = "https://open.spotify.com/album/5poA9SAx0Xiz1cf17fWBLS";
+const DEMO_APPLE_MUSIC_URL = "https://music.apple.com/us/album/1/1440833098";
+
+function recentUrl(item) {
+  return item?.url || item?.spotifyUrl || "";
+}
 
 function loadRecent() {
   if (typeof window === "undefined") return [];
   try {
-    return JSON.parse(localStorage.getItem(RECENT_KEY)) || [];
+    const items = JSON.parse(localStorage.getItem(RECENT_KEY)) || [];
+    return items
+      .map((item) => ({ ...item, url: recentUrl(item) }))
+      .filter((item) => item.url);
   } catch { return []; }
 }
 
 function saveRecent(item) {
   if (typeof window === "undefined") return;
-  const recent = loadRecent().filter(r => r.spotifyUrl !== item.spotifyUrl);
+  const recent = loadRecent().filter((entry) => recentUrl(entry) !== item.url);
   recent.unshift(item);
   localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)));
 }
@@ -314,17 +322,23 @@ export default function Home() {
     localStorage.setItem("poster_preset", "default");
   }, []);
 
-  async function loadSpotifyItem(spotifyUrl) {
+  async function loadMusicItem(itemUrl) {
     setLoading(true);
     setError("");
     try {
-      const data = await fetchSpotifyItem(spotifyUrl);
+      const data = await fetchMusicItem(itemUrl);
       setAlbum(data);
       setPosterOverrides(DEFAULT_OVERRIDES);
       overridesRef.current = DEFAULT_OVERRIDES;
       undoRef.current = { past: [], future: [] };
       setUndoVersion(v => v + 1);
-      const entry = { name: data.name, artists: data.artists, coverUrl: data.coverUrl, spotifyUrl: data.spotifyUrl };
+      const entry = {
+        name: data.name,
+        artists: data.artists,
+        coverUrl: data.coverUrl,
+        provider: data.provider,
+        url: data.url,
+      };
       saveRecent(entry);
       setRecentItems(loadRecent());
     } catch (err) {
@@ -337,12 +351,12 @@ export default function Home() {
   async function handleGenerate(e) {
     e.preventDefault();
     if (!url.trim()) return;
-    await loadSpotifyItem(url.trim());
+    await loadMusicItem(url.trim());
   }
 
-  async function handleSelectRecent(spotifyUrl) {
-    setUrl(spotifyUrl);
-    await loadSpotifyItem(spotifyUrl);
+  async function handleSelectRecent(itemUrl) {
+    setUrl(itemUrl);
+    await loadMusicItem(itemUrl);
   }
 
   const currentLayout = customTheme ? "classic" : (currentPreset?.layout || "classic");
@@ -453,7 +467,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.16, ease: [0.4, 0, 0.2, 1] }}
               >
-                Paste a Spotify album or song link and generate a clean, customizable poster in a few seconds.
+                Paste a Spotify or Apple Music album or song link and generate a clean, customizable poster in a few seconds.
               </motion.p>
 
               <motion.form
@@ -467,8 +481,8 @@ export default function Home() {
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Paste a Spotify link..."
-                  aria-label="Spotify album or song link"
+                  placeholder="Paste a Spotify or Apple Music link..."
+                  aria-label="Spotify or Apple Music album or song link"
                   className="landing-input"
                 />
                 <button type="submit" disabled={loading || !url.trim()} className="landing-btn">
@@ -487,11 +501,22 @@ export default function Home() {
                   className="landing-link-btn"
                   onClick={() => {
                     setUrl(DEMO_SPOTIFY_URL);
-                    loadSpotifyItem(DEMO_SPOTIFY_URL);
+                    loadMusicItem(DEMO_SPOTIFY_URL);
                   }}
                   disabled={loading}
                 >
-                  Try demo album
+                  Try Spotify demo
+                </button>
+                <button
+                  type="button"
+                  className="landing-link-btn"
+                  onClick={() => {
+                    setUrl(DEMO_APPLE_MUSIC_URL);
+                    loadMusicItem(DEMO_APPLE_MUSIC_URL);
+                  }}
+                  disabled={loading}
+                >
+                  Try Apple Music demo
                 </button>
                 <span className="landing-meta">Albums and songs. PNG + PDF export.</span>
               </motion.div>
@@ -551,9 +576,9 @@ export default function Home() {
                 <div className="recent-grid">
                   {recentItems.map((item) => (
                     <button
-                      key={item.spotifyUrl}
+                      key={item.url}
                       className="recent-card"
-                      onClick={() => handleSelectRecent(item.spotifyUrl)}
+                      onClick={() => handleSelectRecent(item.url)}
                       disabled={loading}
                     >
                       {item.coverUrl ? (
@@ -685,6 +710,7 @@ export default function Home() {
             urlLoading={loading}
             urlError={error}
             coverUrl={album.coverUrl}
+            provider={album.provider}
             onUndo={handleUndo}
             onRedo={handleRedo}
             canUndo={canUndo}

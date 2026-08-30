@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "scannables.scdn.co",
       },
+      {
+        protocol: "https",
+        hostname: "*.mzstatic.com",
+      },
     ],
   },
 };

@@ -205,7 +205,7 @@ function BottomCode({ url, uri, codeType, barColor, codeColor }) {
 
   const codeStyle = codeColor ? { color: codeColor } : undefined;
 
-  if (codeType === "scannable" && uri) {
+  if (codeType === "scannable" && uri?.startsWith("spotify:")) {
     if (!svgStr) return <div className="poster-code-wrap" style={{ height: 'var(--fp-qr-size)' }} />;
     return (
       <div 
@@ -318,7 +318,7 @@ function LayoutClassic({ album, quote, codeType, barColor, codeColor }) {
           {album.tracks.map((t) => <TrackRow key={t.number} t={t} />)}
         </div>
         <div className="poster-bottom-right">
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
         </div>
       </div>
     </>
@@ -359,7 +359,7 @@ function LayoutGallery({ album, quote, codeType, albumColors, barColor, codeColo
         </div>
         <div className="poster-gallery-footer-right">
           <Signature artistName={album.artists} />
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
           <p className="poster-artist">{album.artists}</p>
           <p className="poster-title poster-title-sm">{album.name}</p>
         </div>
@@ -404,7 +404,7 @@ function LayoutEditorial({ album, quote, codeType, barColor, codeColor }) {
           </div>
           <div className="poster-editorial-meta-col poster-editorial-code-col">
             <span className="poster-meta-label">Listen</span>
-            <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+            <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
           </div>
         </div>
       </div>
@@ -437,7 +437,7 @@ function LayoutBoldBlock({ album, quote, codeType, barColor, codeColor }) {
         <div className="poster-tracklist">
           {album.tracks.map((t) => <TrackRow key={t.number} t={t} hideArtists />)}
         </div>
-        <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+        <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
       </div>
     </>
   );
@@ -473,7 +473,7 @@ function LayoutMinimal({ album, quote, codeType, barColor, codeColor }) {
         </p>
         <div className="poster-minimal-meta-row">
           <span className="poster-meta">{album.releaseDate} &bull; {getCountLabel(album)} &bull; {album.totalDuration}</span>
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
         </div>
       </div>
     </>
@@ -509,7 +509,7 @@ function LayoutImmersive({ album, quote, codeType, barColor, codeColor }) {
           <span className="poster-meta">
             {album.releaseDate} &bull; {getCountLabel(album)} &bull; {album.totalDuration}
           </span>
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
         </div>
       </div>
     </>
@@ -553,7 +553,7 @@ function LayoutRetro({ album, quote, codeType, barColor, codeColor }) {
         <StarRating rating={5} className="poster-retro-stars" />
         <div className="poster-retro-meta-row">
           <span className="poster-meta">{album.releaseDate} &bull; {album.totalDuration}</span>
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
         </div>
       </div>
     </>
@@ -579,7 +579,7 @@ function LayoutOverlay({ album, quote, codeType, barColor, codeColor }) {
         {quote && <p className="poster-quote">&ldquo;{quote}&rdquo;</p>}
         <SoundWave className="poster-overlay-wave" width={140} height={30} bars={40} />
         <div className="poster-overlay-bottom">
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
           <p className="poster-meta">{album.totalDuration} &bull; {album.releaseDate}</p>
         </div>
       </div>
@@ -601,7 +601,7 @@ function LayoutMasterpieceJCard({ album, quote, codeType, barColor, codeColor })
         </div>
         <div className="jcard-spine-text">{album.artists} &mdash; {album.name}</div>
         <div className="jcard-spine-bottom">
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
         </div>
       </div>
       <div className="jcard-front">
@@ -643,7 +643,7 @@ function LayoutMasterpieceComic({ album, quote, codeType, barColor, codeColor })
           {album.tracks.map((t) => <TrackRow key={t.number} t={t} hideArtists />)}
         </div>
         <div className="comic-footer-right">
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
         </div>
       </div>
     </>
@@ -677,7 +677,7 @@ function LayoutMasterpiecePlaylist({ album, quote, codeType, albumColors, barCol
             </div>
           )}
           <Signature artistName={album.artists} />
-          <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+          <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
         </div>
       </div>
     </>
@@ -706,7 +706,7 @@ function LayoutMasterpieceGraduation({ album, quote, codeType, barColor, codeCol
             <p className="poster-meta">{getCountAndDuration(album)}</p>
           </div>
           <div className="grad-footer-right">
-            <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+            <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
             <SoundWave className="poster-decor-wave" width={80} height={20} bars={20} />
           </div>
         </div>
@@ -744,7 +744,7 @@ function LayoutMasterpieceReceipt({ album, quote, codeType, barColor, codeColor 
           <div className="receipt-divider" />
           {quote && <p className="poster-quote">&ldquo;{quote}&rdquo;</p>}
           <div className="receipt-barcode">
-            <BottomCode url={album.spotifyUrl} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
+            <BottomCode url={album.url} uri={album.uri} codeType={codeType} barColor={barColor} codeColor={codeColor} />
           </div>
           <p className="poster-meta receipt-thanks">*** THANK YOU ***</p>
         </div>

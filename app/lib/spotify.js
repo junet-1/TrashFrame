@@ -28,6 +28,16 @@ function isSpotifyHost(hostname) {
   return hostname === "spotify.com" || hostname.endsWith(".spotify.com");
 }
 
+export function isSpotifyUrl(value) {
+  try {
+    const parsed = new URL(normalizeInputUrl(String(value || "").trim()));
+    const hostname = parsed.hostname.toLowerCase();
+    return isSpotifyHost(hostname) || isSpotifyShortLink(hostname);
+  } catch {
+    return false;
+  }
+}
+
 function isSpotifyShortLink(hostname) {
   return hostname === "spotify.link" || hostname.endsWith(".spotify.link");
 }
@@ -212,6 +222,7 @@ function normalizeAlbum(data, url, id) {
   });
 
   return {
+    provider: "spotify",
     mediaType: "album",
     name: data.name,
     artists: joinArtists(data.artists),
@@ -221,7 +232,7 @@ function normalizeAlbum(data, url, id) {
     totalDuration: msToTime(totalMs),
     tracks,
     coverUrl: data.images?.[0]?.url || "",
-    spotifyUrl: data.external_urls?.spotify || url,
+    url: data.external_urls?.spotify || url,
     uri: data.uri || `spotify:album:${id}`,
     albumType: (data.album_type || "album").toUpperCase(),
     collectionName: data.name,
@@ -237,6 +248,7 @@ function normalizeTrack(data, url, id) {
   const collectionTrackCount = data.album?.total_tracks || null;
 
   return {
+    provider: "spotify",
     mediaType: "track",
     name: data.name,
     artists: joinArtists(data.artists),
@@ -253,7 +265,7 @@ function normalizeTrack(data, url, id) {
       },
     ],
     coverUrl: data.album?.images?.[0]?.url || "",
-    spotifyUrl: data.external_urls?.spotify || url,
+    url: data.external_urls?.spotify || url,
     uri: data.uri || `spotify:track:${id}`,
     albumType: "TRACK",
     collectionName: data.album?.name || "",
@@ -318,4 +330,3 @@ export async function fetchSpotifyItem(url) {
 
   return normalizeAlbum(data, url, resourceId);
 }
-
